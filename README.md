@@ -1,6 +1,6 @@
 # FSMoney
 
-[![Actions](https://github.com/wk-j/fs-money/workflows//badge.svg)](https://github.com/wk-j/fs-money/actions)
+[![Actions](https://github.com/wk-j/fs-money/workflows/Test/badge.svg)](https://github.com/wk-j/fs-money/actions)
 
 A library for working with money. This library inspired by [elixirmoney/money](https://github.com/elixirmoney/money)
 which's implements by following Martin Fowler's Money Pattern.
