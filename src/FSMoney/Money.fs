@@ -13,6 +13,15 @@ module Money =
     let internal failCurrenciesMustEqual a b =
         invalidArg "Money.Currency" (sprintf "Currency %s must be the same as %s" a.Currency b.Currency)
 
+    let private (| Ltt | Eqq | Gtt |) (a,b) =
+        match (a.Currency, b.Currency) with
+        | (c1, c2) when c1 = c2 ->
+            match a.Amount - b.Amount with
+            | x when x < 0 -> Ltt
+            | x when x = 0 -> Eqq
+            | _  -> Gtt
+        | _ -> failCurrenciesMustEqual a b
+
     let create amount currency = { Amount = amount; Currency = currency }
 
     let isZero { Amount = amount } = amount = 0
@@ -21,22 +30,13 @@ module Money =
 
     let isNegative { Amount = amount } = amount < 0
 
-    let equals { Amount = a1; Currency = c1 } { Amount = a2; Currency = c2 } = a1 = a2 && c1 = c2
-
-    let compare a b =
-        match (a.Currency, b.Currency) with
-        | (c1, c2) when c1 = c2 ->
-            match a.Amount - b.Amount with
-            | x when x < 0 -> -1
-            | x when x = 0 -> 0
-            | _ (* when x > 0 *)  -> 1
-        | _ -> failCurrenciesMustEqual a b
+    let equals a1 a2 = a1 = a2
 
     let cmp a b =
-        match compare a b with
-        | -1 -> Lt
-        | 0 -> Eq
-        | _ (* 1 *)  -> Gt
+        match a, b with
+        | Ltt -> Lt
+        | Eqq -> Eq
+        | _ -> Gt
 
     let addFloat m v =
         { Amount = m.Amount + ((v * 100.0) |> round |> int)
